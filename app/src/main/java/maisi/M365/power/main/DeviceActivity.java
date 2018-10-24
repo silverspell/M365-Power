@@ -101,6 +101,9 @@ public class DeviceActivity extends AppCompatActivity
     private TextView averageEfficiency;
     private TextView motorTemp;
 
+    private Button btnLock;
+    private Button btnUnlock;
+
     private Button startHandlerButton;
     private Deque<IRequest> requestQueue = new LinkedBlockingDeque<>();
     private Map<RequestType, IRequest> requestTypes = new HashMap<>();
@@ -118,6 +121,8 @@ public class DeviceActivity extends AppCompatActivity
     private boolean runOnce = false;
     private static final int PERMISSION_EXTERNAL_STORAGE = 0;
     private ConstraintLayout mRootView;
+
+
 
 
     private Runnable updateSuperRunnable = new Runnable() {
@@ -255,6 +260,8 @@ public class DeviceActivity extends AppCompatActivity
         life.setType(RequestType.BATTERYLIFE);
         textViews.add(life);
 
+        btnLock = this.findViewById(R.id.btnLock);
+        btnUnlock = this.findViewById(R.id.btnUnlock);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -296,6 +303,22 @@ public class DeviceActivity extends AppCompatActivity
         else{
             storagePermission=true;
         }
+
+
+        btnLock.setOnClickListener(view -> {
+            if (isConnected()) {
+                lockOn();
+                Toast.makeText(this, "Device Locked: " + Statistics.isScooterLocked(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        btnUnlock.setOnClickListener(view -> {
+            if(isConnected()) {
+                lockOff();
+                Toast.makeText(this, "Device Locked: " + Statistics.isScooterLocked(), Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
 
     private void fillCheckFirstList() {
